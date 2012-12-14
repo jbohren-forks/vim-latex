@@ -126,6 +126,11 @@ TexLet g:Tex_CompileRule_bib = g:Tex_BibtexFlavor . ' $*'
 " when deciding how to compile
 TexLet g:Tex_UseMakefile = 1
 
+" Set Tex_UseCMake to 1 if you want to use CMake to build your latex code. The
+" big difference this makes is that all files will be built out-of-source in a
+" 'build' directory instead of where the original .tex files are.
+TexLet g:Tex_UseCMake = 0
+
 " }}}
 " ------------------------------------------------------------------------------ 
 " Viewer rules {{{

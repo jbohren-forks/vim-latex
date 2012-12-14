@@ -99,18 +99,25 @@ function! Tex_CompileLatex()
 
 	let s:origdir = fnameescape(getcwd())
 
-	" Find the main file corresponding to this file. Always cd to the
-	" directory containing the file to avoid problems with the directory
-	" containing spaces.
-	" Latex on linux seems to be unable to handle file names with spaces at
-	" all! Therefore for the moment, do not attempt to handle spaces in the
-	" file name.
-	if exists('b:fragmentFile')
-		let mainfname = expand('%:p:t')
-		call Tex_CD(expand('%:p:h'))
+	" Check if CMake is being used to build the TeX files out-of-source
+	if Tex_GetVarValue('Tex_UseCMake') == 0
+		" Find the main file corresponding to this file. Always cd to the
+		" directory containing the file to avoid problems with the directory
+		" containing spaces.
+		" Latex on linux seems to be unable to handle file names with spaces at
+		" all! Therefore for the moment, do not attempt to handle spaces in the
+		" file name.
+		if exists('b:fragmentFile')
+			let mainfname = expand('%:p:t')
+			call Tex_CD(expand('%:p:h'))
+		else
+			let mainfname = Tex_GetMainFileName(':p:t')
+			call Tex_CD(Tex_GetMainFileName(':p:h'))
+		end
 	else
+		" Navigate to the nearest 'build' directory to look for Makefiles
 		let mainfname = Tex_GetMainFileName(':p:t')
-		call Tex_CD(Tex_GetMainFileName(':p:h'))
+		call Tex_CD(finddir('build', '.;'))
 	end
 
 	call Tex_Debug('Tex_CompileLatex: getting mainfname = ['.mainfname.'] from Tex_GetMainFileName', 'comp')
